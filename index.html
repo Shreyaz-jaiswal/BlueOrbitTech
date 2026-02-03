@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HDD Store | BlueOrbit Technologies</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
+    }
+
+    body{
+      background:#0b0f1a;
+      color:#fff;
+      overflow-x:hidden;
+    }
+
+    /* Company name (top-left) */
+    .company-name{
+      position:absolute;
+      top:30px;
+      left:40px;
+      font-size:1.4rem;
+      font-weight:700;
+      color:#ffffff;
+      z-index:10;
+    }
+
+    header{
+      min-height:100vh;
+      background:radial-gradient(circle at top,#1e293b,#020617);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:40px;
+      position:relative;
+    }
+
+    header h1{
+      font-size:3.5rem;
+      font-weight:700;
+    }
+
+    header h1 span{
+      color:#38bdf8;
+    }
+
+    header p{
+      margin-top:15px;
+      font-size:1.1rem;
+      color:#cbd5f5;
+    }
+
+    .btns{
+      margin-top:30px;
+    }
+
+    button{
+      padding:14px 28px;
+      border-radius:16px;
+      border:none;
+      font-size:1rem;
+      cursor:pointer;
+      transition:.3s;
+      margin:0 8px;
+    }
+
+    .primary{
+      background:#38bdf8;
+      color:#020617;
+    }
+
+    .primary:hover{
+      transform:scale(1.05);
+    }
+
+    .secondary{
+      background:transparent;
+      border:1px solid #38bdf8;
+      color:#38bdf8;
+    }
+
+    .secondary:hover{
+      background:#38bdf8;
+      color:#020617;
+    }
+
+    /* Cart button */
+    .cart-btn{
+      position:fixed;
+      top:40px;
+      right:40px;
+      background:#38bdf8;
+      color:#020617;
+      padding:12px 20px;
+      border-radius:20px;
+      font-weight:600;
+      z-index:1000;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      transition:.3s;
+    }
+
+    .cart-btn:hover{
+      transform:scale(1.05);
+    }
+
+    .cart-count{
+      background:#020617;
+      color:#38bdf8;
+      border-radius:50%;
+      width:24px;
+      height:24px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.9rem;
+      font-weight:600;
+    }
+
+    section{
+      padding:80px 10%;
+    }
+
+    .features{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:30px;
+    }
+
+    .card{
+      background:#020617;
+      padding:30px;
+      border-radius:24px;
+      box-shadow:0 20px 40px rgba(0,0,0,.4);
+      transition:.4s;
+    }
+
+    .card:hover{
+      transform:translateY(-10px);
+    }
+
+    .card h3{
+      margin:15px 0;
+    }
+
+    .card p{
+      color:#94a3b8;
+      font-size:.95rem;
+    }
+
+    .products{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:40px;
+    }
+
+    .product img{
+      width:100%;
+      border-radius:18px;
+    }
+
+    .product h4{
+      margin:15px 0 5px;
+    }
+
+    .price{
+      color:#38bdf8;
+      font-weight:600;
+    }
+
+    /* Contact section */
+    .contact{
+      background:#020617;
+      padding:60px 10%;
+    }
+
+    .contact p{
+      color:#cbd5f5;
+      line-height:1.7;
+      max-width:800px;
+    }
+
+    footer{
+      padding:25px;
+      text-align:center;
+      background:#020617;
+      color:#64748b;
+    }
+
+    /* Scroll animation */
+    .reveal{
+      opacity:0;
+      transform:translateY(40px);
+      transition:1s;
+    }
+
+    .reveal.active{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    /* Modal Styles */
+    .modal{
+      display:none;
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.8);
+      z-index:2000;
+      backdrop-filter:blur(5px);
+    }
+
+    .modal-content{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      background:#020617;
+      padding:40px;
+      border-radius:24px;
+      max-width:500px;
+      width:90%;
+      text-align:center;
+    }
+
+    .close{
+      position:absolute;
+      top:15px;
+      right:20px;
+      font-size:2rem;
+      cursor:pointer;
+      color:#94a3b8;
+    }
+
+    .close:hover{
+      color:#fff;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="company-name">BlueOrbit Technologies</div>
+
+<!-- Cart Button -->
+<div class="cart-btn" id="cartBtn">
+  🛒 Cart
+  <span class="cart-count" id="cartCount">0</span>
+</div>
+
+<header>
+  <div>
+    <h1>Premium <span>Hard Drives</span></h1>
+    <p>Fast. Secure. Built for heavy workloads & long-term reliability.</p>
+
+    <div class="btns">
+      <button class="primary" onclick="openExplore()">Explore</button>
+      <button class="secondary" onclick="openCart()">Buy Now</button>
+    </div>
+  </div>
+</header>
+
+<!-- Explore Modal -->
+<div id="exploreModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeExplore()">&times;</span>
+    <h2 style="color:#38bdf8; margin-bottom:20px;">Explore Our Products</h2>
+    <p>Browse our premium HDD collection and find the perfect storage solution for your needs!</p>
+    <button class="primary" onclick="scrollToProducts()" style="margin-top:20px; padding:16px 32px; font-size:1.1rem;">View Products</button>
+  </div>
+</div>
+
+<section>
+  <h2 style="margin-bottom:40px">Why Choose Our HDDs</h2>
+
+  <div class="features">
+    <div class="card reveal">
+      <h3>⚡ High Performance</h3>
+      <p>Optimized RPM and cache for fast data access.</p>
+    </div>
+
+    <div class="card reveal">
+      <h3>🔒 Secure Storage</h3>
+      <p>Advanced data protection and long lifespan.</p>
+    </div>
+
+    <div class="card reveal">
+      <h3>🚚 Fast Delivery</h3>
+      <p>Quick & safe shipping across the country.</p>
+    </div>
+  </div>
+</section>
+
+<section id="productsSection">
+  <h2 style="margin-bottom:40px">Best Sellers</h2>
+
+  <div class="products">
+    <div class="product card reveal">
+      <img src="https://i.ibb.co/Pz5yRCnC/1tb-compute1.jpg" alt="HDD">
+      <h4>Seagate 1TB HDD</h4>
+      <p class="price">₹3,499</p>
+      <button class="primary" style="margin-top:10px" onclick="addToCart('Seagate 1TB HDD', 3499)">Add to Cart</button>
+    </div>
+
+    <div class="product card reveal">
+      <img src="https://i.ibb.co/SX1bj5Qd/wd2tb2-1.jpg" alt="HDD">
+      <h4>WD Blue 2TB HDD</h4>
+      <p class="price">₹5,999</p>
+      <button class="primary" style="margin-top:10px" onclick="addToCart('WD Blue 2TB HDD', 5999)">Add to Cart</button>
+    </div>
+
+    <div class="product card reveal">
+      <img src="https://i.ibb.co/d0XnFk6n/71ccl-VEb-WTL.jpg" alt="HDD">
+      <h4>Toshiba 4TB HDD</h4>
+      <p class="price">₹9,499</p>
+      <button class="primary" style="margin-top:10px" onclick="addToCart('Toshiba 4TB HDD', 9499)">Add to Cart</button>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Us -->
+<section class="contact">
+  <h2>Contact Us</h2>
+  <p>
+    <strong>BlueOrbit Technologies</strong><br>
+    Near Malabar Gold And Diamonds, 6-5-1185 Ward No 87 Somajiguda,<br>
+    6-5-1185/169, Hussain Nagar Colony, B.S Maqta,<br>
+    Kundanbagh Colony, Begumpet, Hyderabad,<br>
+    Telangana 500016<br><br>
+    📞 <strong style="color:#38bdf8">1860 266 2666</strong>
+  </p>
+</section>
+
+<footer>
+  © 2026 BlueOrbit Technologies • Professional Storage Solutions
+</footer>
+
+<script>
+  // Cart functionality
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  function updateCartCount() {
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.getElementById('cartCount').textContent = count;
+  }
+
+  function addToCart(name, price) {
+    const existingItem = cart.find(item => item.name === name);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({ name, price, quantity: 1 });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    alert(`${name} added to cart!`);
+  }
+
+  function openCart() {
+    if (cart.length === 0) {
+      alert('Your cart is empty. Add some products first!');
+      return;
+    }
+    window.open('trol.html', '_blank');
+  }
+
+  // Explore functionality
+  function openExplore() {
+    document.getElementById('exploreModal').style.display = 'block';
+  }
+
+  function closeExplore() {
+    document.getElementById('exploreModal').style.display = 'none';
+  }
+
+  function scrollToProducts() {
+    closeExplore();
+    document.getElementById('productsSection').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Cart button
+  document.getElementById('cartBtn').addEventListener('click', openCart);
+
+  // Modal close on outside click
+  window.onclick = function(event) {
+    const modal = document.getElementById('exploreModal');
+    if (event.target === modal) {
+      closeExplore();
+    }
+  }
+
+  // Scroll animation
+  const reveals = document.querySelectorAll('.reveal');
+  window.addEventListener('scroll', () => {
+    reveals.forEach(el => {
+      const top = el.getBoundingClientRect().top;
+      if (top < window.innerHeight - 100) {
+        el.classList.add('active');
+      }
+    });
+  });
+
+  // Initialize cart count
+  updateCartCount();
+</script>
+
+</body>
+</html>
